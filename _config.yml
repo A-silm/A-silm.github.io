@@ -1,30 +1,26 @@
 # site settings
 
-title: cvless
-description: Jekyll theme for a beautiful online CV
-taglong: Jekyll theme for a beautiful online CV
-tagshort: Jekyll theme
+title: a-silm
+description: a-silm landing page
+taglong: a-silm landing page
+tagshort: landing page
 url: https://cvless.netlify.app
 baseurl: ""
 permalink: pretty
-repo: https://github.com/username/username.github.io
+repo: https://github.com/a-silm/a-silm.github.io
 
 # author settings
 
 author:
-  name: Place Holder
-  email: username@domain.com
+  name: a silm
+  email: ale.sil.martz@gmail.com
 photo: /assets/jpg/photo.jpg
 
 # social media links
 
 social:
-  facebook: username
-  github: username
-  instagram: username
-  linkedin: username
-  stackoverflow: 0000000/username
-  twitter: username
+  github: a-silm
+  linkedin: alejandrosilvam
 
 # build settings
 
