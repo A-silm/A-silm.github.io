@@ -25,7 +25,7 @@ During this project, some of the tools I used were the following:
 -   SecurityEvent (Windows event logs).
 -   Syslog (Linux event logs).
 
-![placeholder](https://via.placeholder.com/800x400 "Large example image")
+<img src="/assets/jpg/Tools.jpg" alt="Tools">
 
 ## Footnotes
 
