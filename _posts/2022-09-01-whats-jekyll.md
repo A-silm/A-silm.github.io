@@ -27,25 +27,30 @@ During this project, some of the tools I used were the following:
 
 <img src="/assets/jpg/Tools.jpg" alt="Tools">
 
-## Footnotes
+## Creating the honeypot
 
-Footnotes are supported as part of the Markdown syntax. Here's one in action. Clicking this number[^fn-sample] will lead you to a footnote. The syntax looks like:
+The first step was to create a Windows virtual machine and disable any security controls to attract Cyber attacks to then measure the security events. I then converted the logs using a third party website (https://ipgeolocation.io/) to gain more accurate locations of the logs.
 
-{% highlight text %}
-Clicking this number[^fn-sample]
+## Importing the event log to Microsoft Azure
+
+Using Microsoft Logs, the following query converted the logs I gathered to raw data, in order to display it on the attack map:
+{% highlight js linenos %}
+FAILED_RDP_WITH_GEO_CL 
+| extend username = extract(@"username:([^,]+)", 1, RawData),
+         timestamp = extract(@"timestamp:([^,]+)", 1, RawData),
+         latitude = extract(@"latitude:([^,]+)", 1, RawData),
+         longitude = extract(@"longitude:([^,]+)", 1, RawData),
+         sourcehost = extract(@"sourcehost:([^,]+)", 1, RawData),
+         state = extract(@"state:([^,]+)", 1, RawData),
+         label = extract(@"label:([^,]+)", 1, RawData),
+         destination = extract(@"destinationhost:([^,]+)", 1, RawData),
+         country = extract(@"country:([^,]+)", 1, RawData)
+| where destination != "samplehost"
+| where sourcehost != ""
+| summarize event_count=count() by timestamp, label, country, state, sourcehost, username, destination, longitude, latitude
 {% endhighlight %}
 
-Each footnote needs the `^fn-` prefix and a unique ID to be referenced for the footnoted content. The syntax for that list looks like this:
-
-{% highlight text %}
-[^fn-sample]: Handy! Now click the return link to go back.
-{% endhighlight %}
-
-You can place the footnoted content wherever you like. Markdown parsers should properly place it at the bottom of the page.
-
-## Heading
-
-This section shows hierarchical headings. Vivamus sagittis lacus vel augue rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+<img src="/assets/jpg/Eventlogs.jpg" alt="Eventlogs">
 
 ### Code
 
