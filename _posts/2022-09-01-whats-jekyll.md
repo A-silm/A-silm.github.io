@@ -4,31 +4,28 @@ title: Example content
 lead: A long post that showcases style elements.
 ---
 
-**Howdy!** This is an example blog post that shows several types of <abbr>html</abbr> content supported in this theme.
+In this project, the goal was to extract data from cyber attacks to a virtual machine that was purposely vulnerable to anyone in the world and record the results into a Log Analytics workspace. These results were used to build an attack map with Microsoft Sentinel and measure how effective security controls are.
 {: .message }
 
 - toc
 {: toc }
 
-Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. _Aenean eu leo quam._ Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.
+In this project, the goal was to extract data from cyber attacks to a virtual machine that was purposely vulnerable to anyone in the world and record the results into a Log Analytics workspace. These results were used to build an attack map with Microsoft Sentinel and measure how effective security controls are.
 
 > Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.
 
 Etiam porta **sem malesuada magna** mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.
 
-## Inline HTML elements
+## Technologies used
 
-HTML defines a long list of available inline tags, a complete list of which can be found on the [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/HTML/Element).
+During this project, some of the tools I used were the following:
 
--   **To bold text**, use `<strong>`.
--   _To italicize text_, use `<em>`.
--   <mark>To highlight</mark>, use `<mark>`.
--   Abbreviations, like <abbr title="HyperText Markup Langage">HTML</abbr>, should use `<abbr>` with an optional `title` attribute for the full phrase.
--   Citations, like <cite>— Franz Kafka</cite>, should use `<cite>`.
--   <del>Deleted</del> text should use `<del>` and <ins>inserted</ins> text should use `<ins>`.
--   Superscript <sup>text</sup> uses `<sup>` and subscript <sub>text</sub> uses `<sub>`.
+-   Microsoft Azure (Virtual machines, Microsoft Sentinel, Microsoft Defender for Cloud, Log Analytics workspace).
+-   Windows Powershell.
+-   SecurityEvent (Windows event logs).
+-   Syslog (Linux event logs).
 
-Most of these elements are styled by browsers with few modifications in the CSS of this theme.
+![placeholder](https://via.placeholder.com/800x400 "Large example image")
 
 ## Footnotes
 
