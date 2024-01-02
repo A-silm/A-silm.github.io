@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Example content
-lead: A long post that showcases style elements.
+title: Siem & honeypot
+lead: Attract worldwide cyberattacks and analize them.
 ---
 
 In this project, the goal was to extract data from cyber attacks to a virtual machine that was purposely vulnerable to anyone in the world and record the results into a Log Analytics workspace. These results were used to build an attack map with Microsoft Sentinel and measure how effective security controls are.
@@ -9,12 +9,6 @@ In this project, the goal was to extract data from cyber attacks to a virtual ma
 
 - toc
 {: toc }
-
-In this project, the goal was to extract data from cyber attacks to a virtual machine that was purposely vulnerable to anyone in the world and record the results into a Log Analytics workspace. These results were used to build an attack map with Microsoft Sentinel and measure how effective security controls are.
-
-> Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.
-
-Etiam porta **sem malesuada magna** mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.
 
 ## Technologies used
 
@@ -53,7 +47,7 @@ FAILED_RDP_WITH_GEO_CL
 <img src="/assets/jpg/Eventlogs.jpg" alt="Eventlogs">
 The logs were actively recorded using Microsoft PowerShell throughout the project, providing a comprehensive dataset for analysis.
 
-### Displaying results on the attack map
+## Displaying results on the attack map
 
 By using another query in Azure Sentinel, the recorded logs were then converted into a map which displayed the attacks by location. This was the result after the first hour of creating the honeypot:
 
@@ -71,7 +65,6 @@ The following table shows the metrics measured in the insecure environment for 2
     <tr>
       <th>Metric</th>
       <th>Count</th>
-      <th>Downvotes</th>
     </tr>
   </thead>
   <tfoot>
@@ -98,7 +91,7 @@ The following table shows the metrics measured in the insecure environment for 2
 
 Security Enhancement and Outcome: Following the reinforcement of security controls, the project yielded promising outcomes. Security alerts and incidents dropped to zero, accompanied by a significant reduction in security events.
 
-### Conclusion
+## Conclusion
 
 This cybersecurity project leveraged Microsoft Azure for the creation and deployment of the honeypot. The integration of log sources into a Log Analytics workspace streamlined data management. Microsoft Sentinel played a pivotal role in triggering alerts and generating incidents based on the logs. By assessing the insecure environment before implementing security controls, comprehensive metrics were obtained to facilitate result comparison. The overarching aim was to evaluate the effectiveness of the implemented security measures.
 
