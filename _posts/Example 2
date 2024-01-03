@@ -1,174 +1,86 @@
 ---
 layout: post
-title: Example 2
-lead: A long post that showcases style elements.
+title: Wireshark threat analysis and filtering
+lead: xxxx.
 ---
 
-**Howdy!** This is an example blog post that shows several types of <abbr>html</abbr> content supported in this theme.
+xxxx.
 {: .message }
 
 - toc
 {: toc }
 
-Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. _Aenean eu leo quam._ Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.
+## Technologies used:
 
-> Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.
+During this exercise, we only used Wireshark to demonstrate its capabilities.
 
-Etiam porta **sem malesuada magna** mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.
+## Part 1: Analysis
 
-## Inline HTML elements
+In order to examine the suspicious traffic in the packet capture below, first the following must be established:
 
-HTML defines a long list of available inline tags, a complete list of which can be found on the [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/HTML/Element).
+-   What is the issue?
+> Suspicious traffic was reported within the network.
+-   What is our scope?
+> Target: traffic from 10.129.43.4.
+> When: last 48 hours. Verify whether the suspicious activity is still ongoing.
+-   What are the target(s)?
+> 10.129.43.4 and unknown protocol (port 4444).
 
--   **To bold text**, use `<strong>`.
--   _To italicize text_, use `<em>`.
--   <mark>To highlight</mark>, use `<mark>`.
--   Abbreviations, like <abbr title="HyperText Markup Langage">HTML</abbr>, should use `<abbr>` with an optional `title` attribute for the full phrase.
--   Citations, like <cite>— Franz Kafka</cite>, should use `<cite>`.
--   <del>Deleted</del> text should use `<del>` and <ins>inserted</ins> text should use `<ins>`.
--   Superscript <sup>text</sup> uses `<sup>` and subscript <sub>text</sub> uses `<sub>`.
+By using XfreeRDP as a remote desktop protocol (RDP) to connect to the IP 10.129.43.4, Wireshark was able to gather the following information:
 
-Most of these elements are styled by browsers with few modifications in the CSS of this theme.
+<img src="/assets/jpg/Filter1.jpg" alt="filter1">
 
-## Footnotes
+After the packet capture, and by checking the conversation plugin we see there are three conversations in this capture. All of these conversations include our suspicious host. We will now verify what the traffic is by inspecting the protocol hierarchy:
 
-Footnotes are supported as part of the Markdown syntax. Here's one in action. Clicking this number[^fn-sample] will lead you to a footnote. The syntax looks like:
+<img src="/assets/jpg/Filter2.jpg" alt="filter2">
 
-{% highlight text %}
-Clicking this number[^fn-sample]
-{% endhighlight %}
+The protocol hierarchy reveals that the traffic is predominantly segmented into both UDP (11.4%) and TCP (79.5%). Our next step is to filter out noise to examine both UDP and TCP traffic:
 
-Each footnote needs the `^fn-` prefix and a unique ID to be referenced for the footnoted content. The syntax for that list looks like this:
+<img src="/assets/jpg/Filter3.jpg" alt="filter3">
 
-{% highlight text %}
-[^fn-sample]: Handy! Now click the return link to go back.
-{% endhighlight %}
+Applying the !tcp filter to isolate UDP traffic, we observe only nine packets. These include four ARP packets, four Network Address Translation (NAT) packets, and one Simple Service Discovery Protocol (SSDP) packet. By examining the packet types and the information within we can conclude it is normal network traffic. Next we will use the filter !udp && !arp to examine TCP traffic:
 
-You can place the footnoted content wherever you like. Markdown parsers should properly place it at the bottom of the page.
+<img src="/assets/jpg/Filter4.jpg" alt="filter4">
 
-## Heading
+We can see that at packet 3 there is a three-way handshake and the same ports are used in the output. Further exploration of the TCP stream from packet 3 allows a deeper understanding of the conversation:
 
-This section shows hierarchical headings. Vivamus sagittis lacus vel augue rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+<img src="/assets/jpg/Filter5.jpg" alt="filter5">
 
-### Code
+Within the conversation in the TCP stream, we see traces of suspicious activity. The first indication is the use of commands such as whoami, ipconfig. This can indicate the intruder wants to verify the access they gained within the network.
+By continuing to examine the TCP stream, we find the following information:
 
-Inline code is available with the `<code>` element. Snippets of multiple lines of code are supported through Rouge. Longer lines are displayed through horizontal scrolling. You may also use code fencing (triple backticks) for rendering code.
+<img src="/assets/jpg/Filter6.jpg" alt="filter6">
 
-{% highlight js %}
-// Example can be run directly in your JavaScript console
+We can see the intruder also used the dir command and was successful in registering a new user to the administrators group. This confirms the corporate infrastructure was breached. This concludes our exercise as the next step is to send the information and evidence to the IR team.
+We can conclude that the intruder used Netcat shell to directly interact with a host within the network and gather more information. The intruder used RDP from the host which triggered alarms and the need to capture the traffic to examine further.
 
-// Create a function that takes two arguments and returns the sum of those arguments
-var adder = new Function("a", "b", "return a + b");
+## Part 2: Filtering and RDP decryption
 
-// Call the function
-adder(2, 6);
-// > 8
-{% endhighlight %}
+After examining the evidence from the first part of this exercise, an RDP-key was found hidden in a folder hive on the host. After some research, we conclude we can use the key to decrypt RDP traffic and inspect it.
+When filtering RDP traffic in the capture yielded no results:
 
-You may also optionally show code snippets with line numbers. Add `linenos` to the Rouge tags.
+<img src="/assets/jpg/Filter7.jpg" alt="filter7">
 
-{% highlight js linenos %}
-// Example can be run directly in your JavaScript console
+By default, RDP uses TLS to encrypt the data. By filtering a commonly used port for RDP, we can verify its existence (tcp.port == 3389)
 
-// Create a function that takes two arguments and returns the sum of those arguments
-var adder = new Function("a", "b", "return a + b");
+<img src="/assets/jpg/Filter8.jpg" alt="filter8">
 
-// Call the function
-adder(2, 6);
-// > 8
-{% endhighlight %}
+This confirms that a session was established between the two hosts over TCP port 3389. To decrypt the RDP traffic, we will use the key we found earlier in Wireshark:
 
-By default, the theme uses GitHub-themed syntax highlighting. The specifics are included in the syntax stylesheet, which is automatically generated by `rougify`.
+<img src="/assets/jpg/Filter9.jpg" alt="filter9">
 
-Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.
+Now that the key was registered within Wireshark, we successfully filter RDP traffic and can now follow TCP streams, export objects or anything else that may help us on our investigation. The key was pulled by using OpenSSL from the server.
 
-### Gists via GitHub Pages
+<img src="/assets/jpg/Filter10.jpg" alt="filter10">
 
-Vestibulum id ligula porta felis euismod semper. Nullam quis risus eget urna mollis ornare vel eu leo. Donec sed odio dui.
+If we filter again to check port 3389 we find a record labeled Ignored Unknown Record, which will show us the username “bucky” in the ASCII:
 
-{% gist 8395a3dbdca0e34d55cfed5d96ea2f14 cvless-example.html %}
+<img src="/assets/jpg/Filter11.jpg" alt="filter11">
 
-Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui. Vestibulum id ligula porta felis euismod semper.
+## Conclusion
 
-### Lists
+This concludes the second part of the exercise, illustrating Wireshark's capability to decrypt data for any protocol when utilizing the appropriate key to establish connections. The process demonstrated emphasizes the tool's effectiveness in enhancing forensic analysis and investigation efforts. The acquired information will be crucial for reporting and further actions, emphasizing the importance of integrating Wireshark in cybersecurity practices.
 
-Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-
--   Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
--   Donec id elit non mi porta gravida at eget metus.
--   Nulla vitae elit libero, a pharetra augue.
-
-Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.
-
-1.  Vestibulum id ligula porta felis euismod semper.
-2.  Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-3.  Maecenas sed diam eget risus varius blandit sit amet non magna.
-
-Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.
-
-<dl>
-  <dt>HyperText Markup Language (HTML)</dt>
-  <dd>The language used to describe and define the content of a Web page</dd>
-
-  <dt>Cascading Style Sheets (CSS)</dt>
-  <dd>Used to describe the appearance of Web content</dd>
-
-  <dt>JavaScript (JS)</dt>
-  <dd>The programming language used to build advanced Web sites and applications</dd>
-</dl>
-
-Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nullam quis risus eget urna mollis ornare vel eu leo.
-
-### Images
-
-Quisque consequat sapien eget quam rhoncus, sit amet laoreet diam tempus. Aliquam aliquam metus erat, a pulvinar turpis suscipit at.
-
-![placeholder](https://via.placeholder.com/800x400 "Large example image")
-![placeholder](https://via.placeholder.com/400x200 "Medium example image")
-![placeholder](https://via.placeholder.com/200x200 "Small example image")
-
-### Tables
-
-Aenean lacinia bibendum nulla sed consectetur. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Upvotes</th>
-      <th>Downvotes</th>
-    </tr>
-  </thead>
-  <tfoot>
-    <tr>
-      <td>Totals</td>
-      <td>21</td>
-      <td>23</td>
-    </tr>
-  </tfoot>
-  <tbody>
-    <tr>
-      <td>Alice</td>
-      <td>10</td>
-      <td>11</td>
-    </tr>
-    <tr>
-      <td>Bob</td>
-      <td>4</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <td>Charlie</td>
-      <td>7</td>
-      <td>9</td>
-    </tr>
-  </tbody>
-</table>
-
-Nullam id dolor id nibh ultricies vehicula ut id elit. Sed posuere consectetur est at lobortis. Nullam quis risus eget urna mollis ornare vel eu leo. This concludes the post.
-
-* * *
-
-Want to see something else added? <a href="https://github.com/piazzai/cvless/issues/new">Open an issue.</a>
+Source: https://academy.hackthebox.com/module/details/81
 
 [^fn-sample]: Handy! Now click the return link to go back.
