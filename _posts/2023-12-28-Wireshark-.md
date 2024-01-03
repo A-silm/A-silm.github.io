@@ -22,6 +22,7 @@ In order to examine the suspicious traffic in the packet capture below, first th
 > Suspicious traffic was reported within the network.
 -   What is our scope?
 > Target: traffic from 10.129.43.4.
+> 
 > When: last 48 hours. Verify whether the suspicious activity is still ongoing.
 -   What are the target(s)?
 > 10.129.43.4 and unknown protocol (port 4444).
