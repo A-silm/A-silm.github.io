@@ -11,7 +11,7 @@ title: CV
 
 Dynamic and results-oriented professional with over 5 years of experience in a fast-paced environment. Excellent customer service, critical thinking and collaborative skills and mindset. Passionate about continuous learning. I am looking for my next challenge in the cyber security field.
 
-#Work experience
+# Work experience
 
 ### Cyber security projects / student (part time)
 Oct. 2023 – Present
