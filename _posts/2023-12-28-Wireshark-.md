@@ -1,10 +1,10 @@
 ---
 layout: post
 title: Wireshark threat analysis and filtering
-lead: xxxx.
+lead: The versatility of this tool to analyze traffic.
 ---
 
-A simple Python program to scan ports.
+In this project we will demonstrate how powerful Wireshark can be when analyzing network traffic.
 {: .message }
 
 - toc
