@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Port scanner with Python
-lead: xxxx.
+lead: A simple Python program to scan ports.
 ---
 
 The objective of this project is to understand how tools like Nmap or Masscan work by implementing Python code to imitate port scanning.
