@@ -4,7 +4,7 @@ title: Wireshark threat analysis and filtering
 lead: xxxx.
 ---
 
-xxxx.
+A simple Python program to scan ports.
 {: .message }
 
 - toc
