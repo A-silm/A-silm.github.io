@@ -76,6 +76,7 @@ May 2017 – November 2017
 ### Nmap
 ### Wireshark
 ### SIEM tools
+### Tenable (Nessus)
 ### Virtual machines
 ### Security frameworks and controls
 ### Security mindset
