@@ -22,6 +22,8 @@ Currently studying cyber security part time. I finished the following courses an
 * Vulnerability Scanning with Nmap: Network Scanning - Coursera.
 * Wireshark for beginners: capture packets - Coursera.
 * CompTIA Security + (expected february 2024).
+
+  
 Projects:
 * Configuring a Microsoft Azure SIEM to capture data and filter it using a honeypot.
 * Utilized Tcpdump to capture and analyze TCP traffic.
